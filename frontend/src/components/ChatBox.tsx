@@ -1,34 +1,32 @@
-import { Box, TextField, Button, Paper } from '@mui/material';
-import Message from './Message';
-import { useState, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { addMessage } from '../redux/chatSlice';
-import type { RootState } from '../redux/store';
+import { Box, TextField, Button, Paper } from "@mui/material";
+import Message from "./Message";
+import QuickReplies from "./QuickReplies";
+import SummaryCard from "./SummaryCard";
+import { useState, useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addMessage } from "../redux/chatSlice";
+import type { RootState } from "../redux/store";
 
 const ChatBox: React.FC = () => {
-    const [input, setInput] = useState('');
+    const [input, setInput] = useState("");
     const chat = useSelector((state: RootState) => state.chat.messages);
     const dispatch = useDispatch();
     const wsRef = useRef<WebSocket | null>(null);
 
     useEffect(() => {
-        const socket = new WebSocket('ws://localhost:5000');
+        const socket = new WebSocket("ws://localhost:5000");
 
         socket.onopen = () => {
-            console.log('✅ WebSocket connected');
+            console.log("✅ WebSocket connected");
         };
 
         socket.onmessage = (event) => {
-            const { reply } = JSON.parse(event.data);
-            console.log('AI Reply:', reply);
-
-            if (reply) {
-                dispatch(addMessage({ sender: 'AI', text: reply }));
-            }
+            const data = JSON.parse(event.data);
+            dispatch(addMessage({ sender: "AI", text: data.reply, sentiment: data.sentiment }));
         };
 
         socket.onclose = () => {
-            console.log('❌ WebSocket disconnected');
+            console.log("❌ WebSocket disconnected");
         };
 
         wsRef.current = socket;
@@ -41,28 +39,27 @@ const ChatBox: React.FC = () => {
     const sendMessage = () => {
         if (!input) return;
         if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-            // Send JSON instead of plain string
             wsRef.current.send(JSON.stringify({ input }));
-            dispatch(addMessage({ sender: 'You', text: input }));
-            setInput('');
-        } else {
-            console.error('WebSocket is not open.');
+            dispatch(addMessage({ sender: "You", text: input }));
+            setInput("");
         }
     };
 
     return (
         <>
-            <Paper sx={{ p: 2, height: '60vh', overflowY: 'scroll' }}>
+            <Paper sx={{ p: 2, height: "60vh", overflowY: "scroll", mb: 2 }}>
                 {chat.map((c, i) => (
-                    <Message key={i} sender={c.sender} text={c.text} />
+                    <Message key={i} sender={c.sender} text={c.text} sentiment={c.sentiment} />
                 ))}
             </Paper>
-            <Box sx={{ display: 'flex', mt: 2 }}>
+            <QuickReplies onSelect={(msg) => setInput(msg)} />
+            <SummaryCard messages={chat} />
+            <Box sx={{ display: "flex", mt: 2 }}>
                 <TextField
                     fullWidth
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+                    onKeyDown={(e) => e.key === "Enter" && sendMessage()}
                 />
                 <Button variant="contained" sx={{ ml: 1 }} onClick={sendMessage}>
                     Send

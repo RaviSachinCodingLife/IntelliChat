@@ -1,4 +1,3 @@
-// backend/server.js
 require("dotenv").config();
 const http = require("http");
 const WebSocket = require("ws");
@@ -13,43 +12,40 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
 wss.on("connection", (ws) => {
-  console.log("WebSocket connected");
+  console.log("WebSocket connected ✅");
 
-  ws.on("message", async (rawMessage) => {
+  ws.on("message", async (message) => {
+    let userMessage;
+
     try {
-      // Expect JSON: { input: "Hello AI" }
-      const { input } = JSON.parse(rawMessage.toString());
-
-      console.log("User said:", input);
-
-      // Detect sentiment
-      const sentiment = SentimentService.detectSentiment(input);
-
-      // Save user message in MongoDB
-      await Message.create({ sender: "You", text: input, sentiment });
-
-      // Generate AI reply
-      const reply = await handleMessage(input);
-
-      // Save AI message
-      await Message.create({ sender: "AI", text: reply, sentiment: "neutral" });
-
-      // Send back to frontend
-      ws.send(JSON.stringify({ reply }));
-    } catch (err) {
-      console.error("Error handling message:", err);
-      ws.send(JSON.stringify({ reply: "Error processing your request." }));
+      const msgObj = JSON.parse(message);
+      userMessage = msgObj.input;
+    } catch {
+      userMessage = message.toString();
     }
+
+    console.log("User:", userMessage);
+
+    const reply = await handleMessage(userMessage);
+    const sentiment = SentimentService.analyze(userMessage);
+
+    const savedMessage = await Message.create({
+      user: "customer",
+      text: userMessage,
+      sentiment,
+    });
+
+    ws.send(JSON.stringify({ reply, sentiment }));
   });
 
   ws.on("close", () => {
-    console.log("WebSocket disconnected");
+    console.log("WebSocket disconnected ❌");
   });
 });
 
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() =>
-    server.listen(PORT, () => console.log(`Server running on ${PORT}`))
+    server.listen(PORT, () => console.log(`🚀 Server running on ${PORT}`))
   )
-  .catch((err) => console.error(err));
+  .catch((err) => console.log(err));

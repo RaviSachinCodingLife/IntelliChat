@@ -1,15 +1,20 @@
-import { Container, Typography } from '@mui/material';
-import ChatBox from './components/ChatBox';
+import { Container, Typography, Box } from "@mui/material";
+import ChatBox from "./components/ChatBox";
 
-const App: React.FC = () => {
+function App() {
   return (
-    <Container maxWidth="sm" sx={{ mt: 5 }}>
-      <Typography variant="h4" align="center" gutterBottom>
-        IntelliChat
-      </Typography>
+    <Container maxWidth="md" sx={{ mt: 5 }}>
+      <Box textAlign="center" mb={3}>
+        <Typography variant="h4" fontWeight="bold">
+          IntelliChat – Gen AI Support Platform
+        </Typography>
+        <Typography variant="subtitle1" color="text.secondary">
+          AI-powered customer support with real-time chat, quick replies, and summaries.
+        </Typography>
+      </Box>
       <ChatBox />
     </Container>
   );
-};
+}
 
 export default App;

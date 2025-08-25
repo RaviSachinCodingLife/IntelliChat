@@ -1,10 +1,8 @@
-function detectSentiment(text) {
-  text = text.toLowerCase();
-  if (text.includes("happy") || text.includes("good") || text.includes("great"))
-    return "positive";
-  if (text.includes("sad") || text.includes("bad") || text.includes("angry"))
-    return "negative";
+function analyze(text) {
+  const lower = text.toLowerCase();
+  if (lower.includes("bad") || lower.includes("angry")) return "negative";
+  if (lower.includes("good") || lower.includes("happy")) return "positive";
   return "neutral";
 }
 
-module.exports = { detectSentiment };
+module.exports = { analyze };

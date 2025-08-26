@@ -1,20 +1,26 @@
-import { Container, Typography, Box } from "@mui/material";
-import ChatBox from "./components/ChatBox";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Chat from "./pages/Chat";
+import PrivateRoute from "./routes/PrivateRoute";
+import PublicRoute from "./routes/PublicRoute";
+import LandingPage from "./pages/LandingPage";
 
-function App() {
+export default function App() {
   return (
-    <Container maxWidth="md" sx={{ mt: 5 }}>
-      <Box textAlign="center" mb={3}>
-        <Typography variant="h4" fontWeight="bold">
-          IntelliChat – Gen AI Support Platform
-        </Typography>
-        <Typography variant="subtitle1" color="text.secondary">
-          AI-powered customer support with real-time chat, quick replies, and summaries.
-        </Typography>
-      </Box>
-      <ChatBox />
-    </Container>
+    <Routes>
+      <Route element={<PublicRoute />}>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Route>
+
+      <Route element={<PrivateRoute />}>
+        <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route path="/chat" element={<Chat />} />
+        <Route path="/home" element={<LandingPage />} />
+      </Route>
+
+      <Route path="*" element={<Navigate to="/home" replace />} />
+    </Routes>
   );
 }
-
-export default App;

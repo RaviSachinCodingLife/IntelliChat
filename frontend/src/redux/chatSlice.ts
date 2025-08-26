@@ -1,27 +1,40 @@
-import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-interface Message {
-  sender: string;
+export interface Msg {
+  sender: "customer" | "agent" | "ai";
   text: string;
   sentiment?: string;
 }
 
 interface ChatState {
-  messages: Message[];
+  conversationId: string | null;
+  messages: Msg[];
+  needsHuman: boolean;
 }
 
-const initialState: ChatState = { messages: [] };
+const initialState: ChatState = {
+  conversationId: null,
+  messages: [],
+  needsHuman: false,
+};
 
 const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
-    addMessage(state, action: PayloadAction<Message>) {
+    setConversation(state, action: PayloadAction<string>) {
+      state.conversationId = action.payload;
+      state.messages = [];
+      state.needsHuman = false;
+    },
+    addMessage(state, action: PayloadAction<Msg>) {
       state.messages.push(action.payload);
+    },
+    setNeedsHuman(state, action: PayloadAction<boolean>) {
+      state.needsHuman = action.payload;
     },
   },
 });
 
-export const { addMessage } = chatSlice.actions;
+export const { setConversation, addMessage, setNeedsHuman } = chatSlice.actions;
 export default chatSlice.reducer;

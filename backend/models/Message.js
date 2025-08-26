@@ -2,9 +2,15 @@ const mongoose = require("mongoose");
 
 const messageSchema = new mongoose.Schema(
   {
-    user: String,
+    conversation: { type: mongoose.Schema.Types.ObjectId, ref: "Conversation" },
+    senderId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+    senderRole: { type: String, enum: ["customer", "agent", "ai"] },
     text: String,
-    sentiment: String,
+    sentiment: { type: String, default: "neutral" },
   },
   { timestamps: true }
 );

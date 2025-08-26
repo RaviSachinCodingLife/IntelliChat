@@ -1,72 +1,65 @@
-import { Box, TextField, Button, Paper } from "@mui/material";
-import Message from "./Message";
+import { useEffect, useRef, useState } from "react";
+import { Paper, Box, TextField, Button, Typography, Alert } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "../redux/store";
+import { addMessage, setNeedsHuman } from "../redux/chatSlice";
+import MessageBubble from "./MessageBubble";
 import QuickReplies from "./QuickReplies";
-import SummaryCard from "./SummaryCard";
-import { useState, useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addMessage } from "../redux/chatSlice";
-import type { RootState } from "../redux/store";
 
-const ChatBox: React.FC = () => {
+export default function ChatBox() {
+    const dispatch = useAppDispatch();
+    const token = useAppSelector(s => s.auth.token)!;
+    const user = useAppSelector(s => s.auth.user)!;
+    const conversationId = useAppSelector(s => s.chat.conversationId)!;
+    const messages = useAppSelector(s => s.chat.messages);
+    const needsHuman = useAppSelector(s => s.chat.needsHuman);
     const [input, setInput] = useState("");
-    const chat = useSelector((state: RootState) => state.chat.messages);
-    const dispatch = useDispatch();
     const wsRef = useRef<WebSocket | null>(null);
 
+    console.log({ user });
+
+
     useEffect(() => {
-        const socket = new WebSocket("ws://localhost:5000");
+        if (!conversationId || !token) return;
+        const ws = new WebSocket(`ws://localhost:5000?token=${encodeURIComponent(token)}&conversationId=${conversationId}`);
+        wsRef.current = ws;
 
-        socket.onopen = () => {
-            console.log("✅ WebSocket connected");
+        ws.onopen = () => console.log("WS connected");
+        ws.onclose = () => console.log("WS closed");
+        ws.onmessage = (e) => {
+            const msg = JSON.parse(e.data);
+            if (msg.type === "message") {
+                if (msg.text) dispatch(addMessage({ sender: "customer", text: msg.text, sentiment: msg.sentiment }));
+                if (msg.aiReply) dispatch(addMessage({ sender: "ai", text: msg.aiReply }));
+                if (typeof msg.needsHuman === "boolean") dispatch(setNeedsHuman(msg.needsHuman));
+            }
         };
+        return () => ws.close();
+    }, [conversationId, token, dispatch]);
 
-        socket.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            dispatch(addMessage({ sender: "AI", text: data.reply, sentiment: data.sentiment }));
-        };
-
-        socket.onclose = () => {
-            console.log("❌ WebSocket disconnected");
-        };
-
-        wsRef.current = socket;
-
-        return () => {
-            socket.close();
-        };
-    }, [dispatch]);
-
-    const sendMessage = () => {
-        if (!input) return;
-        if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-            wsRef.current.send(JSON.stringify({ input }));
-            dispatch(addMessage({ sender: "You", text: input }));
-            setInput("");
-        }
-    };
+    function send(text: string) {
+        if (!text.trim() || !wsRef.current) return;
+        wsRef.current.send(JSON.stringify({ type: "user_message", text }));
+        dispatch(addMessage({ sender: "customer", text }));
+        setInput("");
+    }
 
     return (
-        <>
-            <Paper sx={{ p: 2, height: "60vh", overflowY: "scroll", mb: 2 }}>
-                {chat.map((c, i) => (
-                    <Message key={i} sender={c.sender} text={c.text} sentiment={c.sentiment} />
-                ))}
-            </Paper>
-            <QuickReplies onSelect={(msg) => setInput(msg)} />
-            <SummaryCard messages={chat} />
-            <Box sx={{ display: "flex", mt: 2 }}>
-                <TextField
-                    fullWidth
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-                />
-                <Button variant="contained" sx={{ ml: 1 }} onClick={sendMessage}>
-                    Send
-                </Button>
+        <Paper sx={{ m: 2, p: 2 }}>
+            <Typography variant="h6" mb={1}>Chat with Support</Typography>
+            {needsHuman && (
+                <Alert severity="info" sx={{ mb: 1 }}>
+                    This looks complex. A human agent will assist you shortly.
+                </Alert>
+            )}
+            <QuickReplies onPick={(t) => setInput(t)} />
+            <Box sx={{ height: "55vh", overflowY: "auto", p: 1, bgcolor: "grey.50", borderRadius: 2, mb: 2 }}>
+                {messages.map((m, i) => <MessageBubble key={i} {...m} />)}
             </Box>
-        </>
+            <Box display="flex" gap={1}>
+                <TextField fullWidth placeholder="Type your message…" value={input} onChange={e => setInput(e.target.value)}
+                    onKeyDown={e => e.key === "Enter" && send(input)} />
+                <Button variant="contained" onClick={() => send(input)}>Send</Button>
+            </Box>
+        </Paper>
     );
-};
-
-export default ChatBox;
+}

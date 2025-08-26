@@ -1,17 +1,14 @@
 import { Box, Button } from "@mui/material";
+const options = ["Order Status", "Refund", "Change Address", "Cancel Order", "Talk to agent"];
 
-const quickReplies = ["Hello", "Need help", "Thanks", "Goodbye"];
-
-const QuickReplies: React.FC<{ onSelect: (msg: string) => void }> = ({ onSelect }) => {
+export default function QuickReplies({ onPick }: { onPick: (t: string) => void }) {
     return (
-        <Box sx={{ display: "flex", gap: 1, mb: 1 }}>
-            {quickReplies.map((reply, idx) => (
-                <Button key={idx} variant="outlined" size="small" onClick={() => onSelect(reply)}>
-                    {reply}
+        <Box display="flex" gap={1} flexWrap="wrap" p={1}>
+            {options.map(o => (
+                <Button key={o} size="small" variant="outlined" onClick={() => onPick(o)}>
+                    {o}
                 </Button>
             ))}
         </Box>
     );
-};
-
-export default QuickReplies;
+}

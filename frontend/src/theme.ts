@@ -1,11 +1,9 @@
 import { createTheme } from "@mui/material/styles";
-
 const theme = createTheme({
   palette: {
-    primary: { main: "#1976d2" },
-    secondary: { main: "#9c27b0" },
+    primary: { main: "#0f62fe" },
+    secondary: { main: "#6f6f6f" },
   },
-  shape: { borderRadius: 12 },
+  shape: { borderRadius: 14 },
 });
-
 export default theme;

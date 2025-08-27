@@ -4,18 +4,21 @@ export interface Msg {
   sender: "customer" | "agent" | "ai";
   text: string;
   sentiment?: string;
+  createdAt: string;
 }
 
 interface ChatState {
   conversationId: string | null;
   messages: Msg[];
   needsHuman: boolean;
+  loadingAi: boolean;
 }
 
 const initialState: ChatState = {
   conversationId: null,
   messages: [],
   needsHuman: false,
+  loadingAi: false,
 };
 
 const chatSlice = createSlice({
@@ -26,7 +29,6 @@ const chatSlice = createSlice({
       state.conversationId = action.payload;
       state.messages = [];
       state.needsHuman = false;
-      console.log({ action: action.payload });
     },
     addMessage(state, action: PayloadAction<Msg>) {
       state.messages.push(action.payload);
@@ -37,9 +39,25 @@ const chatSlice = createSlice({
     setMessages: (state, action) => {
       state.messages = action.payload;
     },
+    clearMessages(state) {
+      state.messages = [];
+    },
+    setLoadingAi(state, action: PayloadAction<boolean>) {
+      state.loadingAi = action.payload;
+    },
+    removeLoader(state) {
+      state.loadingAi = false;
+    },
   },
 });
 
-export const { setConversation, addMessage, setNeedsHuman, setMessages } =
-  chatSlice.actions;
+export const {
+  setConversation,
+  clearMessages,
+  addMessage,
+  setNeedsHuman,
+  setLoadingAi,
+  removeLoader,
+  setMessages,
+} = chatSlice.actions;
 export default chatSlice.reducer;

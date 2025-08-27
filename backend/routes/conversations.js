@@ -41,4 +41,17 @@ router.post("/:id/submit", auth, async (req, res) => {
   res.json({ ok: true, summary });
 });
 
+// GET all messages for a conversation
+router.get("/:id/messages", async (req, res) => {
+  try {
+    const messages = await Message.find({ conversation: req.params.id }).sort({
+      createdAt: 1,
+    });
+    res.json({ messages });
+  } catch (err) {
+    console.error("Error fetching messages:", err);
+    res.status(500).json({ error: "Failed to fetch messages" });
+  }
+});
+
 module.exports = router;

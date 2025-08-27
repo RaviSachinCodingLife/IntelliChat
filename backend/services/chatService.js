@@ -7,9 +7,6 @@ const model = genAI.getGenerativeModel({
   model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
 });
 
-/**
- * Build a compact context from last N messages for coherence.
- */
 async function buildContext(conversationId, limit = 10) {
   const msgs = await Message.find({ conversation: conversationId })
     .sort({ createdAt: -1 })

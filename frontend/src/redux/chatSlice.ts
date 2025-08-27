@@ -26,6 +26,7 @@ const chatSlice = createSlice({
       state.conversationId = action.payload;
       state.messages = [];
       state.needsHuman = false;
+      console.log({ action: action.payload });
     },
     addMessage(state, action: PayloadAction<Msg>) {
       state.messages.push(action.payload);
@@ -33,8 +34,12 @@ const chatSlice = createSlice({
     setNeedsHuman(state, action: PayloadAction<boolean>) {
       state.needsHuman = action.payload;
     },
+    setMessages: (state, action) => {
+      state.messages = action.payload;
+    },
   },
 });
 
-export const { setConversation, addMessage, setNeedsHuman } = chatSlice.actions;
+export const { setConversation, addMessage, setNeedsHuman, setMessages } =
+  chatSlice.actions;
 export default chatSlice.reducer;

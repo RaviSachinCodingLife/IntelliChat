@@ -15,7 +15,7 @@ export default function ChatBox() {
     const [input, setInput] = useState("");
     const wsRef = useRef<WebSocket | null>(null);
 
-    console.log({ user });
+    console.log({ user, messages });
 
 
     useEffect(() => {

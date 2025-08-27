@@ -1,15 +1,20 @@
 import { useEffect } from "react";
 import { Box, Button } from "@mui/material";
 import ChatBox from "../components/ChatBox";
-import TopBar from "../components/TopBar";
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../redux/store";
 import { setConversation } from "../redux/chatSlice";
+import Navbar from "../components/NavBar";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../redux/authSlice";
 
 export default function Chat() {
     const dispatch = useAppDispatch();
+    const nav = useNavigate();
+    const user = useAppSelector(s => s.auth.user);
     const token = useAppSelector(s => s.auth.token);
     const conversationId = useAppSelector(s => s.chat.conversationId);
+
 
     useEffect(() => {
         (async () => {
@@ -32,7 +37,7 @@ export default function Chat() {
 
     return (
         <Box>
-            <TopBar />
+            <Navbar user={user} onLogout={() => { dispatch(logout()); nav("/login"); }} />
             <ChatBox />
             <Box display="flex" justifyContent="flex-end" p={2}>
                 <Button variant="contained" onClick={submitConversation}>Submit & Email Summary</Button>

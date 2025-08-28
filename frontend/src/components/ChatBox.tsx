@@ -1,17 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { Paper, Box, TextField, Button, Typography, Alert, IconButton, InputAdornment } from "@mui/material";
+import { Box, TextField, Alert, IconButton, InputAdornment } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../redux/store";
 import { addMessage, removeLoader, setLoadingAi, setMessages, setNeedsHuman } from "../redux/chatSlice";
 import MessageBubble from "./MessageBubble";
 import QuickReplies from "./QuickReplies";
 import SendIcon from "@mui/icons-material/Send";
-import "../assets/css/loader.css"
-import Footer from "./Footer";
+import "../assets/css/loader.css";
 
 export default function ChatBox() {
     const dispatch = useAppDispatch();
     const token = useAppSelector((s) => s.auth.token)!;
-    const user = useAppSelector((s) => s.auth.user)!;
     const conversationId = useAppSelector((s) => s.chat.conversationId)!;
     const messages = useAppSelector((s) => s.chat.messages);
     const needsHuman = useAppSelector((s) => s.chat.needsHuman);
@@ -104,16 +102,21 @@ export default function ChatBox() {
                     This looks complex. A human agent will assist you shortly.
                 </Alert>
             )}
-            <Box sx={{ height: "55vh", overflowY: "auto", p: 1, bgcolor: "grey.50", borderRadius: 2, mb: 2 }}>
+            <Box sx={{ height: "37vh", overflowY: "auto", p: 1, bgcolor: "grey.50", borderRadius: 2, mb: 2 }}>
                 {messages.map((m, i) => <MessageBubble key={i} {...m} />)}
                 {loadingAi && (
-                    <Box sx={{ display: "flex", alignItems: "center", p: 1 }}>
-                        <span className="dot-loader"></span>
+                    <Box sx={{ display: "flex", justifyContent: "flex-start", p: 1 }}>
+                        <span className="dot-loader">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </span>
                     </Box>
                 )}
+
             </Box>
 
-            <Box display="flex" flexDirection={"column"} alignItems={"flex-end"} gap={1}>
+            <Box display="flex" flexDirection={"column"} alignItems={"flex-end"} gap={1} mt={5}>
                 <QuickReplies onPick={(t) => setInput(t)} />
 
                 <TextField

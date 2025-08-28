@@ -12,11 +12,13 @@ import {
 } from "@mui/material";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { useNavigate } from "react-router-dom";
 
 const Navbar: React.FC<{ user: { name: string; email: string } | null; onLogout: () => void }> = ({
     user,
     onLogout,
 }) => {
+    const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -33,18 +35,18 @@ const Navbar: React.FC<{ user: { name: string; email: string } | null; onLogout:
             }}
         >
             <Toolbar sx={{ justifyContent: "space-between" }}>
-                {/* Brand Title */}
                 <Typography
                     variant="h6"
+                    onClick={() => navigate("/")}
                     sx={{
                         fontWeight: "bold",
                         letterSpacing: 0.5,
+                        cursor: "pointer"
                     }}
                 >
                     IntelliChat Support
                 </Typography>
 
-                {/* User Profile Section */}
                 {user && (
                     <Box>
                         <IconButton onClick={handleMenuOpen} sx={{ p: 0 }}>

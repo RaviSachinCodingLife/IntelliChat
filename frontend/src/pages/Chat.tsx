@@ -66,14 +66,13 @@ export default function Chat() {
                     sx={{
                         width: "100%",
                         maxWidth: "1100px",
-                        p: 3,
                         borderRadius: 3,
-                        border: "1px solid rgba(255,192,173,0.6)", 
+                        border: "1px solid rgba(255,192,173,0.6)",
                         display: "flex",
                         flexDirection: "column",
-                        bgcolor: "#fff0f0", 
-                        mx: "auto", 
-                        boxShadow: "0 6px 20px rgba(255,192,173,0.25)", 
+                        bgcolor: "#fff0f0",
+                        mx: "auto",
+                        boxShadow: "0 6px 20px rgba(255,192,173,0.25)",
                     }}
                 >
 
@@ -89,6 +88,7 @@ export default function Chat() {
                                 px: 3,
                                 py: 1.5,
                                 borderRadius: 3,
+                                display: "none",
                                 "&:hover": { bgcolor: "#ffb09a" },
                             }}
                         >
@@ -99,9 +99,6 @@ export default function Chat() {
 
 
             </Box>
-
-            {/* Footer at the bottom */}
-            <Footer />
         </Box>
     );
 }

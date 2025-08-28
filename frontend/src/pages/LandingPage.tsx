@@ -1,8 +1,5 @@
-// src/pages/LandingPage.tsx
-import React, { use, useEffect, useState } from "react";
+import React from "react";
 import {
-    AppBar,
-    Toolbar,
     Typography,
     Box,
     Grid,
@@ -11,12 +8,9 @@ import {
     Container,
     Accordion,
     AccordionSummary,
-    AccordionDetails,
+    AccordionDetails
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ChatOutlinedIcon from "@mui/icons-material/ChatOutlined";
-import PhoneInTalkOutlinedIcon from "@mui/icons-material/PhoneInTalkOutlined";
-import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 import SupportAgentOutlinedIcon from "@mui/icons-material/SupportAgentOutlined";
 import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
@@ -25,8 +19,7 @@ import WorkspacePremiumOutlinedIcon from "@mui/icons-material/WorkspacePremiumOu
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 import { Link, useNavigate } from "react-router-dom";
-import supportImg from "../assets/images/premium_photo-1661582120130-03b9bdc47a75.avif"
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import supportImg from "../assets/images/premium_photo-1661582120130-03b9bdc47a75.avif";
 import StyledCard from "../utils/StyledCard";
 import SupportCard from "../utils/SupportCard";
 import Navbar from "../components/NavBar";

@@ -1,0 +1,7 @@
+:80
+
+root * /srv
+file_server
+
+# SPA routing (optional)
+try_files {path} /index.html

@@ -1,0 +1,19 @@
+:80
+
+# Serve frontend build
+
+root \* /frontend/dist
+file_server
+
+# SPA routing
+
+try_files {path} /index.html
+
+# Proxy API/WebSocket requests to backend
+
+handle_path /api/_ {
+reverse_proxy http://localhost:5000
+}
+handle_path /ws/_ {
+reverse_proxy http://localhost:5000
+}

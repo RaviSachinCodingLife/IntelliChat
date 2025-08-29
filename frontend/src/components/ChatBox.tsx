@@ -28,12 +28,8 @@ export default function ChatBox() {
   const loadingAi = useAppSelector((s) => s.chat.loadingAi);
   const [input, setInput] = useState("");
   const wsRef = useRef<WebSocket | null>(null);
-  const WS_URL =
-    (window.location.protocol === "https:" ? "wss" : "ws") +
-    "://" +
-    window.location.host +
-    (import.meta.env.VITE_WS_URL || "/ws");
-  const API_URL = import.meta.env.VITE_API_URL || "/api";
+  const WS_URL = import.meta.env.VITE_WS_URL;
+  const API_URL = import.meta.env.VITE_API_URL;
 
   // 🟢 Fetch old messages from DB
   useEffect(() => {

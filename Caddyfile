@@ -7,12 +7,12 @@ file_server
 # SPA routing
 try_files {path} /index.html
 
-# Proxy API requests (keep /api prefix)
-handle /api/* {
+# Proxy API requests (all methods)
+handle_path /api/* {
     reverse_proxy http://backend:5000
 }
 
 # Proxy WebSocket requests
-handle /ws/* {
+handle_path /ws/* {
     reverse_proxy http://backend:5000
 }

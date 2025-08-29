@@ -120,3 +120,7 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => server.listen(PORT, () => console.log(`Server on ${PORT}`)))
   .catch((err) => console.error(err));
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

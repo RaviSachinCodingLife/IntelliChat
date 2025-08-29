@@ -9,11 +9,14 @@ file_server
 
 try_files {path} /index.html
 
-# Proxy API/WebSocket requests to backend
+# Proxy API requests to backend
 
-handle_path /api/_ {
-reverse_proxy http://localhost:5000
+handle_path /api/\* {
+reverse_proxy http://backend:5000
 }
-handle_path /ws/_ {
-reverse_proxy http://localhost:5000
+
+# Proxy WebSocket requests to backend
+
+handle_path /ws/\* {
+reverse_proxy http://backend:5000
 }

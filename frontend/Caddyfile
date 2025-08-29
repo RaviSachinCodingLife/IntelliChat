@@ -1,7 +1,13 @@
 :80
 
-root * /srv
+# Serve Vite build
+root * /srv/dist
 file_server
 
-# SPA routing (optional)
+# SPA routing (React Router)
 try_files {path} /index.html
+
+# Optional: proxy API requests to backend
+handle_path /api/* {
+    reverse_proxy http://localhost:5000
+}

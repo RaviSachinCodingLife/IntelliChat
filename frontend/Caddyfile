@@ -4,10 +4,10 @@
 root * /srv/dist
 file_server
 
-# SPA routing (React Router)
+# SPA routing
 try_files {path} /index.html
 
-# Optional: proxy API requests to backend
+# Optional: API reverse proxy if backend is running
 handle_path /api/* {
     reverse_proxy http://localhost:5000
 }

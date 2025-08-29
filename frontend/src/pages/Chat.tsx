@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Box, Button, Paper, Typography } from "@mui/material";
+import { Box, Button, Paper } from "@mui/material";
 import ChatBox from "../components/ChatBox";
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../redux/store";
@@ -7,7 +7,6 @@ import { setConversation } from "../redux/chatSlice";
 import Navbar from "../components/NavBar";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../redux/authSlice";
-import Footer from "../components/Footer";
 
 export default function Chat() {
     const dispatch = useAppDispatch();

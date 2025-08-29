@@ -1,4 +1,3 @@
-// src/components/SupportCard.tsx
 import React from "react";
 import { Card, CardContent, Typography, Box, Button } from "@mui/material";
 

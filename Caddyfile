@@ -7,12 +7,12 @@ file_server
 # SPA routing
 try_files {path} /index.html
 
-# Proxy API requests (all methods)
+# Proxy API requests (all HTTP methods)
 handle_path /api/* {
-    reverse_proxy http://backend:5000
+    reverse_proxy https://intellichat-production.up.railway.app
 }
 
 # Proxy WebSocket requests
 handle_path /ws/* {
-    reverse_proxy http://backend:5000
+    reverse_proxy https://intellichat-production.up.railway.app
 }
